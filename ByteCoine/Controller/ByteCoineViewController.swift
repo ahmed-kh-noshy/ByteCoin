@@ -9,7 +9,7 @@ import UIKit
 
 class ByteCoineViewController: UIViewController {
     
-    let coinManager = CoinManager()
+    var coinManager = CoinManager()
     
     @IBOutlet weak var currencyLabel: UILabel!
     @IBOutlet weak var bitcoinLabel: UILabel!
@@ -19,6 +19,7 @@ class ByteCoineViewController: UIViewController {
         super.viewDidLoad()
         currencyPicker.dataSource = self
         currencyPicker.delegate = self
+        coinManager.delegate = self
     }
    
 }
@@ -39,6 +40,24 @@ extension ByteCoineViewController: UIPickerViewDelegate {
         return coinManager.currencyArray[row]
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let selectedCurrency = coinManager.currencyArray[row]
+        coinManager.getCoinPrice(for: selectedCurrency)
+        print(coinManager.currencyArray[row])
         print(row)
     }
+}
+
+extension ByteCoineViewController: CoinManagerDelegate{
+    func didUpdateCoin(_ coinManager: CoinManager, coin: CoinModel) {
+        DispatchQueue.main.async {
+            self.bitcoinLabel.text = coin.rateString
+            self.currencyLabel.text = coin.currencyName
+        }
+    }
+    
+    func didFailWithError(error: Error) {
+        print(error)
+    }
+    
+    
 }
