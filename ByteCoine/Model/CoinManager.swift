@@ -22,7 +22,6 @@ struct CoinManager {
 
     func getCoinPrice(for currency: String){
         let urlString = "\(baseURL)/\(currency)?apikey=\(apiKey)"
-        print(urlString)
         performRequest(with: urlString)
     }
     func performRequest(with urlString: String){
